@@ -1,0 +1,197 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, useColorScheme } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { ArrowLeft, Send, FlaskRound as Flask } from 'lucide-react-native';
+
+export default function ChemistryCategoryInput() {
+  const { category } = useLocalSearchParams();
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+  
+  const [problem, setProblem] = useState('');
+  const [compounds, setCompounds] = useState('');
+  const [showError, setShowError] = useState(false);
+
+  const categoryTips = {
+    stoichiometry: "Include balanced chemical equations",
+    'acids-and-bases': "Specify concentrations and pH values if known",
+    thermodynamics: "Include temperature, pressure, and energy values",
+    kinetics: "Include reaction rates and concentrations",
+    equilibrium: "Specify initial concentrations and equilibrium constants"
+  };
+
+  const handleSubmit = () => {
+    if (!problem.trim()) {
+      setShowError(true);
+      return;
+    }
+    router.push('/solution/new');
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000000' : '#F2F2F7' }]}>
+      <View style={[styles.header, { backgroundColor: isDarkMode ? '#1C1C1E' : '#FFFFFF' }]}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <ArrowLeft size={24} color={isDarkMode ? '#FFFFFF' : '#000000'} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>
+          {category ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ') : 'Chemistry'} Problem
+        </Text>
+      </View>
+
+      <ScrollView style={styles.content}>
+        <View style={[styles.formCard, { backgroundColor: isDarkMode ? '#1C1C1E' : '#FFFFFF' }]}>
+          <View style={styles.categoryHeader}>
+            <Flask size={24} color={isDarkMode ? '#FFFFFF' : '#000000'} />
+            <Text style={[styles.categoryTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>
+              {category ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ') : 'Chemistry'} Problem Solver
+            </Text>
+          </View>
+
+          <Text style={[styles.label, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Chemical Compounds</Text>
+          <TextInput
+            style={[
+              styles.input,
+              { color: isDarkMode ? '#FFFFFF' : '#000000', borderColor: isDarkMode ? '#38383A' : '#D1D1D6' }
+            ]}
+            placeholder="List the chemical compounds involved (e.g., H2O, NaCl)"
+            placeholderTextColor={isDarkMode ? '#8E8E93' : '#8E8E93'}
+            value={compounds}
+            onChangeText={setCompounds}
+          />
+
+          <Text style={[styles.label, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Problem Description</Text>
+          <TextInput
+            style={[
+              styles.problemInput,
+              { color: isDarkMode ? '#FFFFFF' : '#000000', borderColor: isDarkMode ? '#38383A' : '#D1D1D6' }
+            ]}
+            placeholder={`Type your ${category ? category.replace('-', ' ') : 'chemistry'} problem here...`}
+            placeholderTextColor={isDarkMode ? '#8E8E93' : '#8E8E93'}
+            multiline
+            textAlignVertical="top"
+            value={problem}
+            onChangeText={(text) => {
+              setProblem(text);
+              setShowError(false);
+            }}
+          />
+
+          {showError && (
+            <Text style={styles.errorText}>
+              Please enter your problem before submitting
+            </Text>
+          )}
+
+          <TouchableOpacity
+            style={[styles.submitButton, { opacity: !problem.trim() ? 0.7 : 1 }]}
+            onPress={handleSubmit}
+          >
+            <Send size={20} color="#FFFFFF" />
+            <Text style={styles.submitButtonText}>Solve Problem</Text>
+          </TouchableOpacity>
+
+          <Text style={[styles.tip, { color: isDarkMode ? '#8E8E93' : '#8E8E93' }]}>
+            Tip: {categoryTips[category as keyof typeof categoryTips] || "Include all chemical formulas and concentrations when applicable."}
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 60,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  formCard: {
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  categoryTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginLeft: 12,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  problemInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 16,
+    height: 200,
+  },
+  errorText: {
+    color: '#FF3B30',
+    marginBottom: 16,
+  },
+  submitButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  tip: {
+    fontSize: 14,
+    marginTop: 16,
+    textAlign: 'center',
+  },
+});
