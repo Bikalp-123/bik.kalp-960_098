@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Search, Calculator, BookOpen, PlusSquare, X } from 'lucide-react-native';
+import { Search, Calculator, BookOpen, PlusSquare, X, Divide, Minus, Plus } from 'lucide-react-native';
 
 export default function MathScreen() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function MathScreen() {
 
   const categories = [
     { id: '1', name: 'Algebra', icon: <Calculator size={24} color="#007AFF" /> },
-    { id: '2', name: 'Calculus', icon: <BookOpen size={24} color="#5E5CE6" /> },
+    { id: '2', name: 'Arithmetic', icon: <Plus size={24} color="#5E5CE6" /> },
     { id: '3', name: 'Geometry', icon: <PlusSquare size={24} color="#FF9500" /> },
     { id: '4', name: 'Trigonometry', icon: <Calculator size={24} color="#FF2D55" /> },
     { id: '5', name: 'Statistics', icon: <BookOpen size={24} color="#30D158" /> },
@@ -22,21 +22,48 @@ export default function MathScreen() {
     { 
       id: '1', 
       category: 'Algebra', 
-      problem: 'Solve for x: 2x + 5 = 13', 
-      preview: 'This is a simple linear equation that can be solved by isolation.' 
+      problem: 'Factorize: x² + 7x + 12', 
+      preview: 'Find the factors of this quadratic expression' 
     },
     { 
       id: '2', 
-      category: 'Algebra', 
-      problem: 'Solve the quadratic equation: x² + 5x + 6 = 0', 
-      preview: 'This quadratic equation can be solved by factoring or using the quadratic formula.' 
+      category: 'Geometry', 
+      problem: 'Find the area of a triangle with sides 5, 6, and 7 using Heron\'s formula', 
+      preview: 'Calculate the area using the semi-perimeter formula' 
     },
     { 
       id: '3', 
-      category: 'Calculus', 
-      problem: 'Find the derivative of f(x) = x³ + 4x² - 2x + 7', 
-      preview: 'We can use the power rule for differentiation here.' 
+      category: 'Arithmetic', 
+      problem: 'Solve: (23.45 + 67.89) × (45.67 - 12.34)', 
+      preview: 'Use order of operations (PEMDAS) to solve this expression' 
     },
+  ];
+
+  const quickCalculations = [
+    {
+      id: '1',
+      name: 'Factorization',
+      icon: <Divide size={20} color="#007AFF" />,
+      route: '/math/factorization'
+    },
+    {
+      id: '2',
+      name: 'Heron\'s Formula',
+      icon: <PlusSquare size={20} color="#5E5CE6" />,
+      route: '/math/herons-formula'
+    },
+    {
+      id: '3',
+      name: 'Basic Operations',
+      icon: <Plus size={20} color="#FF9500" />,
+      route: '/math/basic-operations'
+    },
+    {
+      id: '4',
+      name: 'Equations',
+      icon: <Minus size={20} color="#FF2D55" />,
+      route: '/math/equations'
+    }
   ];
 
   return (
@@ -74,6 +101,26 @@ export default function MathScreen() {
             </Text>
           </TouchableOpacity>
         )}
+      </View>
+
+      <View style={styles.quickCalcSection}>
+        <Text style={[styles.sectionTitle, {color: isDarkMode ? '#FFFFFF' : '#000000'}]}>
+          Quick Calculations
+        </Text>
+        <View style={styles.quickCalcGrid}>
+          {quickCalculations.map((calc) => (
+            <TouchableOpacity
+              key={calc.id}
+              style={[styles.quickCalcButton, {backgroundColor: isDarkMode ? '#1C1C1E' : '#FFFFFF'}]}
+              onPress={() => router.push(calc.route)}
+            >
+              {calc.icon}
+              <Text style={[styles.quickCalcText, {color: isDarkMode ? '#FFFFFF' : '#000000'}]}>
+                {calc.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       <View style={styles.categories}>
@@ -208,6 +255,33 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginLeft: 8,
+  },
+  quickCalcSection: {
+    padding: 16,
+  },
+  quickCalcGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 12,
+  },
+  quickCalcButton: {
+    flex: 1,
+    minWidth: '45%',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  quickCalcText: {
+    marginTop: 8,
+    fontSize: 14,
+    fontWeight: '500',
   },
   categories: {
     padding: 16,

@@ -30,93 +30,86 @@ export default function SolutionScreen() {
   const [showCopied, setShowCopied] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
 
-  // This would normally come from an API or database
   const getSolution = (problemId: string): Solution => {
     const solutions: Record<string, Solution> = {
       'math-1': {
         id: 'math-1',
         type: 'Algebra',
-        title: 'Quadratic Equation',
-        text: 'Solve the quadratic equation: x² + 5x + 6 = 0',
+        title: 'Quadratic Factorization',
+        text: 'Factorize: x² + 7x + 12',
         steps: [
           {
             id: '1',
-            text: 'Factor the equation',
-            explanation: 'To solve this quadratic equation, we\'ll factor it into two binomials.',
-            formula: 'x² + 5x + 6 = (x + 2)(x + 3)',
+            text: 'Identify the coefficients',
+            explanation: 'In the expression x² + 7x + 12:\na = 1 (coefficient of x²)\nb = 7 (coefficient of x)\nc = 12 (constant term)',
+            formula: 'ax² + bx + c',
           },
           {
             id: '2',
-            text: 'Set each factor to zero',
-            explanation: 'When the product of factors equals zero, at least one factor must be zero.',
-            formula: 'x + 2 = 0  or  x + 3 = 0',
+            text: 'Find factors of the constant term',
+            explanation: 'Find factors of 12 that add up to 7:\n3 and 4 are factors of 12 that add to 7',
+            formula: '3 + 4 = 7 and 3 × 4 = 12',
           },
           {
             id: '3',
-            text: 'Solve for x',
-            explanation: 'Subtract the constant from both sides in each equation.',
-            formula: 'x = -2  or  x = -3',
-            result: 'The solutions are x = -2 and x = -3',
+            text: 'Write the factored expression',
+            explanation: 'Use the factors to write the expression as a product of two binomials',
+            formula: 'x² + 7x + 12 = (x + 3)(x + 4)',
+            result: 'The factored expression is (x + 3)(x + 4)',
           },
         ],
       },
-      'physics-1': {
-        id: 'physics-1',
-        type: 'Mechanics',
-        title: 'Force Calculation',
-        text: 'Calculate the force needed to accelerate a 10kg mass at 5 m/s²',
+      'math-2': {
+        id: 'math-2',
+        type: 'Geometry',
+        title: "Heron's Formula",
+        text: 'Find the area of a triangle with sides 5, 6, and 7',
         steps: [
           {
             id: '1',
-            text: "Apply Newton's Second Law",
-            explanation: "We'll use F = ma where m is mass and a is acceleration",
-            formula: 'F = ma',
+            text: 'Calculate semi-perimeter',
+            explanation: 'First, find the semi-perimeter (s) by adding all sides and dividing by 2',
+            formula: 's = (a + b + c)/2 = (5 + 6 + 7)/2 = 9',
           },
           {
             id: '2',
-            text: 'Substitute the values',
-            explanation: 'Mass (m) = 10 kg, Acceleration (a) = 5 m/s²',
-            formula: 'F = (10 kg)(5 m/s²)',
+            text: "Apply Heron's Formula",
+            explanation: 'Use the formula: Area = √(s(s-a)(s-b)(s-c))',
+            formula: '√(9(9-5)(9-6)(9-7))',
           },
           {
             id: '3',
-            text: 'Calculate the force',
-            explanation: 'Multiply the numbers and include the units',
-            formula: 'F = 50 N',
-            result: 'The required force is 50 Newtons',
+            text: 'Solve the equation',
+            explanation: 'Simplify the expression under the square root',
+            formula: '√(9 × 4 × 3 × 2) = √216',
+            result: 'The area of the triangle is 14.70 square units',
           },
         ],
       },
-      'chemistry-1': {
-        id: 'chemistry-1',
-        type: 'Stoichiometry',
-        title: 'Balancing Chemical Equation',
-        text: 'Balance the equation: Fe + O₂ → Fe₂O₃',
+      'math-3': {
+        id: 'math-3',
+        type: 'Arithmetic',
+        title: 'Complex Calculation',
+        text: 'Solve: (23.45 + 67.89) × (45.67 - 12.34)',
         steps: [
           {
             id: '1',
-            text: 'Count atoms on each side',
-            explanation: 'Left side: 1 Fe, 2 O\nRight side: 2 Fe, 3 O',
-            formula: 'Fe + O₂ → Fe₂O₃',
+            text: 'Solve parentheses first',
+            explanation: 'Calculate the sums and differences inside parentheses',
+            formula: '23.45 + 67.89 = 91.34\n45.67 - 12.34 = 33.33',
           },
           {
             id: '2',
-            text: 'Balance iron atoms',
-            explanation: 'Add coefficient 2 to Fe on the left',
-            formula: '2Fe + O₂ → Fe₂O₃',
+            text: 'Multiply the results',
+            explanation: 'Multiply the results from step 1',
+            formula: '91.34 × 33.33',
           },
           {
             id: '3',
-            text: 'Balance oxygen atoms',
-            explanation: 'Add coefficient 3/2 to O₂ on the left',
-            formula: '2Fe + 3/2O₂ → Fe₂O₃',
-          },
-          {
-            id: '4',
-            text: 'Multiply all coefficients by 2',
-            explanation: 'To eliminate fractions, multiply everything by 2',
-            formula: '4Fe + 3O₂ → 2Fe₂O₃',
-            result: 'The balanced equation is: 4Fe + 3O₂ → 2Fe₂O₃',
+            text: 'Calculate final result',
+            explanation: 'Perform the multiplication',
+            formula: '91.34 × 33.33 = 3,043.36',
+            result: 'The answer is 3,043.36',
           },
         ],
       },
@@ -128,7 +121,6 @@ export default function SolutionScreen() {
   const solution = getSolution(id as string);
 
   const handleCopyToClipboard = () => {
-    // In a real app, implement actual copying here
     setShowCopied(true);
     Animated.sequence([
       Animated.timing(fadeAnim, {
@@ -459,7 +451,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 8,
   },
-  stepNumberText: {
+  step
+
+NumberText: {
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
